@@ -31,14 +31,12 @@ jobs:
       - name: Checkout private test repository
         uses: actions/checkout@v3
         with:
-          repository: Seeds-kr/2025-seeds-java-study-tests
+          repository: Seeds-kr/2025-seeds-java-study-tests   # 실제 조직/레포 이름으로 수정
           token: ${{ secrets.PRIVATE_REPO_TOKEN }}
-          ref: main
-          # checkout 경로를 실제 파일 구조에 맞춰 수정:
-          path: week1/seeds-java-test
+          ref: main                                   # 실제 기본 브랜치 이름
+          path: week1/seeds-java-test                 # 파일 구조에 맞춘 경로
 
       - name: Run Gradle tests in private test repository
-        # 파싱한 정보로 동적으로 경로를 사용할 수도 있지만, 현재 구조에선 고정 경로 사용
         working-directory: ./week1/seeds-java-test
         run: |
           if [ -f "./gradlew" ]; then

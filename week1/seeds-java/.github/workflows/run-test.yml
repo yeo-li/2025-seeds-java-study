@@ -20,11 +20,11 @@ jobs:
           # PR 제목 예시: [week1/seeds-java] 설명
           PR_TITLE="${{ github.event.pull_request.title }}"
           echo "PR 제목: $PR_TITLE"
-          if [[ "$PR_TITLE" =~ \[(week1)\/(seeds-java)\] ]]; then
+          if [[ "$PR_TITLE" =~ \[(week[0-9]+)/([a-zA-Z0-9_-]+)\] ]]; then
             echo "week=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
             echo "mission=${BASH_REMATCH[2]}" >> "$GITHUB_OUTPUT"
           else
-            echo "PR 제목 형식 오류: [week1/seeds-java] 형식으로 작성하세요."
+            echo "PR 제목 형식 오류: [weekX/mission-name] 형식으로 작성하세요."
             exit 1
           fi
 
@@ -33,10 +33,13 @@ jobs:
         with:
           repository: Seeds-kr/2025-seeds-java-study-tests
           token: ${{ secrets.PRIVATE_REPO_TOKEN }}
-          path: test-code
+          ref: main
+          # checkout 경로를 실제 파일 구조에 맞춰 수정:
+          path: week1/seeds-java-test
 
       - name: Run Gradle tests in private test repository
-        working-directory: ./test-code/week1/seeds-java-test
+        # 파싱한 정보로 동적으로 경로를 사용할 수도 있지만, 현재 구조에선 고정 경로 사용
+        working-directory: ./week1/seeds-java-test
         run: |
           if [ -f "./gradlew" ]; then
             chmod +x ./gradlew

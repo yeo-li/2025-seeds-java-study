@@ -1,0 +1,54 @@
+name: Run Tests on PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout public repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Parse PR title for week and mission
+        id: parse_pr
+        shell: bash
+        run: |
+          # PR 제목 예시: [week1/seeds-java] 설명
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          echo "PR 제목: $PR_TITLE"
+          if [[ "$PR_TITLE" =~ \[(week1)\/(seeds-java)\] ]]; then
+            echo "week=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+            echo "mission=${BASH_REMATCH[2]}" >> "$GITHUB_OUTPUT"
+          else
+            echo "PR 제목 형식 오류: [week1/seeds-java] 형식으로 작성하세요."
+            exit 1
+          fi
+
+      - name: Checkout private test repository
+        uses: actions/checkout@v3
+        with:
+          repository: your-org/private-test-repo
+          token: ${{ secrets.PRIVATE_REPO_TOKEN }}
+          path: test-code
+
+      - name: Run Gradle tests in private test repository
+        working-directory: ./test-code/week1/seeds-java-test
+        run: |
+          if [ -f "./gradlew" ]; then
+            chmod +x ./gradlew
+            ./gradlew clean test
+          else
+            gradle clean test
+          fi
+
+      - name: Post PR comment with test results
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: "Test Results"
+          message: |
+            자동 채점 결과 (seeds-java 미션)
+            테스트 완료 – 빌드 로그를 확인하세요.

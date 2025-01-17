@@ -31,7 +31,7 @@ jobs:
       - name: Checkout private test repository
         uses: actions/checkout@v3
         with:
-          repository: your-org/private-test-repo
+          repository: Seeds-kr/2025-seeds-java-study-tests
           token: ${{ secrets.PRIVATE_REPO_TOKEN }}
           path: test-code
 

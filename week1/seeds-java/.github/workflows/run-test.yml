@@ -31,7 +31,7 @@ jobs:
       - name: Checkout private test repository
         uses: actions/checkout@v3
         with:
-          repository: Seeds-kr/2025-seeds-java-study-tests   # 실제 조직/레포 이름으로 수정
+          repository: Seeds-kr/2025-seeds-java-study-tests
           token: ${{ secrets.PRIVATE_REPO_TOKEN }}
           ref: main                                   # 실제 기본 브랜치 이름
           path: week1/seeds-java-test                 # 파일 구조에 맞춘 경로

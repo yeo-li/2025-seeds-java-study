@@ -15,7 +15,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        System.out.println("단어 맞추기 게임을 시작합니다!.");
+        System.out.println("단어 맞추기 게임을 시작합니다!!!.");
         Scanner scanner = new Scanner(System.in);
         new Main().run(scanner);
         scanner.close();
